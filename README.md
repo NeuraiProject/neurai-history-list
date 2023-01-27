@@ -50,6 +50,8 @@ function main() {
   console.table(toPresent);
 }
 main();
+
+//Lets grab some test data
 function getDeltas() {
   return [
     {
