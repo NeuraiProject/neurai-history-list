@@ -1,5 +1,5 @@
 {
-  "name": "ravencoin-history-list",
+  "name": "@ravenrebels/ravencoin-history-list",
   "version": "1.0.0",
   "description": "Creates a list of transactions for a wallet based on address deltas, in a human understandable way.",
   "source": "index.ts",
