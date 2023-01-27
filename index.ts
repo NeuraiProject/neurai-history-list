@@ -1,7 +1,15 @@
 export default function getHistory(deltas: IDelta[]): IHistoryItem[] {
   const deltasByTransactionId = getDeltasMappedToTransactionId(deltas);
   const history = Array.from(deltasByTransactionId.values()).map(getListItem);
-
+  history.sort((h1, h2) => {
+    if (h1.blockHeight > h2.blockHeight) {
+      return -1;
+    }
+    if (h2.blockHeight > h1.blockHeight) {
+      return 1;
+    }
+    return 0;
+  });
   return history;
 }
 
