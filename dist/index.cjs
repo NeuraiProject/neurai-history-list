@@ -11,7 +11,6 @@ $parcel$export(module.exports, "default", () => $80bd448eb6ea085b$export$2e2bcd8
 function $80bd448eb6ea085b$export$2e2bcd8739ae039(deltas) {
     const deltasByTransactionId = $80bd448eb6ea085b$var$getDeltasMappedToTransactionId(deltas);
     const history = Array.from(deltasByTransactionId.values()).map($80bd448eb6ea085b$var$getListItem);
-    console.log(history);
     return history;
 }
 /**

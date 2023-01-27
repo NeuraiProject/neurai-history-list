@@ -1,7 +1,6 @@
 function $c3f6c693698dc7cd$export$2e2bcd8739ae039(deltas) {
     const deltasByTransactionId = $c3f6c693698dc7cd$var$getDeltasMappedToTransactionId(deltas);
     const history = Array.from(deltasByTransactionId.values()).map($c3f6c693698dc7cd$var$getListItem);
-    console.log(history);
     return history;
 }
 /**

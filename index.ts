@@ -1,7 +1,7 @@
 export default function getHistory(deltas: IDelta[]): IHistoryItem[] {
   const deltasByTransactionId = getDeltasMappedToTransactionId(deltas);
   const history = Array.from(deltasByTransactionId.values()).map(getListItem);
-  console.log(history);
+
   return history;
 }
 
