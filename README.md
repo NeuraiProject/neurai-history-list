@@ -1,6 +1,11 @@
 # ravencoin-history-list
 Creates a list of transactions for a wallet based on address deltas, in a human understandable way.
 
+As a developer, you have to ask a Ravencoin node for the address deltas (getaddressdelta).
+The address deltas represents everything that has come in and out from your addresses.
+
+See example below.
+
 
 ## Install
 `npm install @ravenrebels/ravencoin-history-list`
