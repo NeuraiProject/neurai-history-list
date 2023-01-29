@@ -27,11 +27,14 @@ See example below.
 
 ## How to use
 
-```
- import {getHistory } from "@ravenrebels/ravencoin-history-list";
 
+`  import {getHistory } from "@ravenrebels/ravencoin-history-list";`
 
-```
+OK so you invoke the methods getHistory with deltas as argument
+const history = getHistory(deltas);
+history is a list.
+Each item in the list represents a transaction in or out of the wallet (list of addresses).
+An item in the history list has a **assets** property, which 
 
 ## Example how to use
 
