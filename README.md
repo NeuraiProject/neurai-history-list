@@ -35,11 +35,8 @@ See example below.
 
 ## Example how to use
 
-Create a JavaScript project (npm init -y) and create an index.mjs file
-
-Run the file `node index.mjs`
-![image](https://user-images.githubusercontent.com/9694984/215101963-0fb8b973-3072-473d-817e-3104ecf28fd1.png)
-
+Checkout example.js
+ 
 ```
 const { getHistory } = require("../ravencoin-history-list"); //Replace with  @ravenrebels/ravencoin-history-list
 const aliceDeltas = require("./example/alice_deltas_after_sending.json");
@@ -55,5 +52,4 @@ for (let item of history) {
 console.table(stuff);
 
 ```
-
-Exepected result
+![image](https://user-images.githubusercontent.com/9694984/215324239-95632d7f-447b-424d-8cbf-c16cf2533b49.png)
