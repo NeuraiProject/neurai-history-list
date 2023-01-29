@@ -52,7 +52,7 @@ For example
     "transactionId": "4729236e883325878665a3d5bb989de3a65341f3c6d7a43b4ce58522773f2548"
   }
   ```
-  ### Example user send 1 LEMONADE token
+  ### Example user sent 1 LEMONADE token
   ```
     {
     "assets": [
