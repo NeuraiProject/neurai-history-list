@@ -64,6 +64,8 @@ For example
     "isSent": true
   },
   ```
+  Unfortunately, it looks like the user intentionally sent 0.01 RVN, that is not true, that was the transaction fee.
+This will be fixed in a later version
 
 ## Example how to use
 
