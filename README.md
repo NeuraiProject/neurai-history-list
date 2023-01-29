@@ -14,19 +14,14 @@ That transaction typically contains
 - One or more unspent transaction outputs (UTXOs) to cover the miner fee, Alice needs to pay some RVN to send an asset.
 - One or more UTXOs for the LEMONADE transfer, like input 20 LEMONADE, output one to BOB and 19 back to a change address.
 
-## How to use
-
-As a developer, you have to ask a Ravencoin node for the address deltas (getaddressdelta).
-The address deltas represents everything that has come in and out from your addresses.
-
-See example below.
-
 ## Install
 
 `npm install @ravenrebels/ravencoin-history-list`
 
 ## How to use
 
+As a developer, you have to ask a Ravencoin node for the address deltas (getaddressdelta).
+The address deltas represents everything that has come in and out from your addresses.
 
 `  import {getHistory } from "@ravenrebels/ravencoin-history-list";`
 
