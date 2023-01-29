@@ -7,10 +7,16 @@ function $parcel$export(e, n, v, s) {
 
 $parcel$defineInteropFlag(module.exports);
 
+$parcel$export(module.exports, "getHistory", () => $80bd448eb6ea085b$export$f9582a3c130d9538);
 $parcel$export(module.exports, "default", () => $80bd448eb6ea085b$export$2e2bcd8739ae039);
-function $80bd448eb6ea085b$export$2e2bcd8739ae039(deltas) {
+function $80bd448eb6ea085b$export$f9582a3c130d9538(deltas) {
     const deltasByTransactionId = $80bd448eb6ea085b$var$getDeltasMappedToTransactionId(deltas);
     const history = Array.from(deltasByTransactionId.values()).map($80bd448eb6ea085b$var$getListItem);
+    history.sort((h1, h2)=>{
+        if (h1.blockHeight > h2.blockHeight) return -1;
+        if (h2.blockHeight > h1.blockHeight) return 1;
+        return 0;
+    });
     return history;
 }
 /**
@@ -68,6 +74,9 @@ function $80bd448eb6ea085b$var$getDeltasMappedToTransactionId(deltas) {
     });
     return map;
 }
+var $80bd448eb6ea085b$export$2e2bcd8739ae039 = {
+    getHistory: $80bd448eb6ea085b$export$f9582a3c130d9538
+};
 
 
 //# sourceMappingURL=index.cjs.map

@@ -1,4 +1,4 @@
-export default function getHistory(deltas: IDelta[]): IHistoryItem[];
+export function getHistory(deltas: IDelta[]): IHistoryItem[];
 export interface IDelta {
     assetName: string;
     satoshis: number;
@@ -19,5 +19,9 @@ export interface IHistoryItem {
     blockHeight: number;
     transactionId: string;
 }
+declare const _default: {
+    getHistory: typeof getHistory;
+};
+export default _default;
 
 //# sourceMappingURL=types.d.ts.map

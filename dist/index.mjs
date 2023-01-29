@@ -1,6 +1,11 @@
-function $c3f6c693698dc7cd$export$2e2bcd8739ae039(deltas) {
+function $c3f6c693698dc7cd$export$f9582a3c130d9538(deltas) {
     const deltasByTransactionId = $c3f6c693698dc7cd$var$getDeltasMappedToTransactionId(deltas);
     const history = Array.from(deltasByTransactionId.values()).map($c3f6c693698dc7cd$var$getListItem);
+    history.sort((h1, h2)=>{
+        if (h1.blockHeight > h2.blockHeight) return -1;
+        if (h2.blockHeight > h1.blockHeight) return 1;
+        return 0;
+    });
     return history;
 }
 /**
@@ -58,7 +63,10 @@ function $c3f6c693698dc7cd$var$getDeltasMappedToTransactionId(deltas) {
     });
     return map;
 }
+var $c3f6c693698dc7cd$export$2e2bcd8739ae039 = {
+    getHistory: $c3f6c693698dc7cd$export$f9582a3c130d9538
+};
 
 
-export {$c3f6c693698dc7cd$export$2e2bcd8739ae039 as default};
+export {$c3f6c693698dc7cd$export$f9582a3c130d9538 as getHistory, $c3f6c693698dc7cd$export$2e2bcd8739ae039 as default};
 //# sourceMappingURL=index.mjs.map
