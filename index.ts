@@ -2,10 +2,14 @@ export function getHistory(deltas: IDelta[]): IHistoryItem[] {
   const deltasByTransactionId = getDeltasMappedToTransactionId(deltas);
   const history = Array.from(deltasByTransactionId.values()).map(getListItem);
   history.sort((h1, h2) => {
-    if (h1.blockHeight > h2.blockHeight) {
+    //Sort on blockheight AND transaction, you can send multiple transaction in the same block
+    const value1 = h1.blockHeight + "_" + h1.transactionId;
+    const value2 = h2.blockHeight + "_" + h2.transactionId;
+
+    if (value1 > value2) {
       return -1;
     }
-    if (h2.blockHeight > h1.blockHeight) {
+    if (value2 < value1) {
       return 1;
     }
     return 0;
@@ -66,6 +70,9 @@ function getListItem(deltas: IDelta[]): IHistoryItem {
   }
 }
 function getDeltasMappedToTransactionId(deltas: IDelta[]) {
+  if (!deltas) {
+    throw Error("Argument deltas is mandatory and cannot be nullish");
+  }
   const map: Map<string, IDelta[]> = new Map();
   deltas.map((delta) => {
     const arr: IDelta[] = map.get(delta.txid) || [];

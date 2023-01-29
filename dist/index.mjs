@@ -55,6 +55,7 @@ function $c3f6c693698dc7cd$export$f9582a3c130d9538(deltas) {
     }
 }
 function $c3f6c693698dc7cd$var$getDeltasMappedToTransactionId(deltas) {
+    if (!deltas) throw Error("Argument deltas is mandatory and cannot be nullish");
     const map = new Map();
     deltas.map((delta)=>{
         const arr = map.get(delta.txid) || [];
