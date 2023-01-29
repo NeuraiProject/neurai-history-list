@@ -1,4 +1,4 @@
-export default function getHistory(deltas: IDelta[]): IHistoryItem[] {
+export function getHistory(deltas: IDelta[]): IHistoryItem[] {
   const deltasByTransactionId = getDeltasMappedToTransactionId(deltas);
   const history = Array.from(deltasByTransactionId.values()).map(getListItem);
   history.sort((h1, h2) => {
@@ -95,3 +95,6 @@ export interface IHistoryItem {
   blockHeight: number;
   transactionId: string;
 }
+export default {
+  getHistory,
+};

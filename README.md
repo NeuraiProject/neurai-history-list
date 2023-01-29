@@ -13,7 +13,7 @@ See example below.
 ## How to use
 
 ```
- import getHistory, { IHistoryItem, IDelta } from "@ravenrebels/ravencoin-history-list"; 
+ import {getHistory } from "@ravenrebels/ravencoin-history-list"; 
 
  
 ``` 
@@ -26,7 +26,7 @@ Run the file `node index.mjs`
 ![image](https://user-images.githubusercontent.com/9694984/215101963-0fb8b973-3072-473d-817e-3104ecf28fd1.png)
 
 ```
-import getHistory from "@ravenrebels/ravencoin-history-list";
+import {getHistory} from "@ravenrebels/ravencoin-history-list";
 
 function main() {
   const history = getHistory(getDeltas());
