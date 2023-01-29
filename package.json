@@ -1,7 +1,7 @@
 {
   "name": "@ravenrebels/ravencoin-history-list",
   "version": "0.0.1",
-  "description": "Creates a list of transactions for a wallet based on address deltas, in a human understandable way.",
+  "description": "A human understandable list of in or outgoing transactions",
   "source": "index.ts",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",

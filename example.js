@@ -2,6 +2,7 @@ const { getHistory } = require("../ravencoin-history-list"); //Replace with  @ra
 const aliceDeltas = require("./example/alice_deltas_after_sending.json");
 
 const history = getHistory(aliceDeltas);
+require("fs").writeFileSync("./history.json", JSON.stringify(history));
 const stuff = [];
 for (let item of history) {
   item.assets.map((asset) => {
