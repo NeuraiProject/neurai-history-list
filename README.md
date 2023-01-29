@@ -1,6 +1,6 @@
 # ravencoin-history-list
 
-Creates a list of transactions for a wallet based on address deltas, in a human understandable way.
+A human understandable list of in or outgoing transactions
 
 ## What do we mean by human understandable?
 
