@@ -30,11 +30,42 @@ See example below.
 
 `  import {getHistory } from "@ravenrebels/ravencoin-history-list";`
 
-OK so you invoke the methods getHistory with deltas as argument
-const history = getHistory(deltas);
-history is a list.
+OK so you invoke the method getHistory with deltas as argument.
+`const history = getHistory(deltas);`
+`history` is a list.
 Each item in the list represents a transaction in or out of the wallet (list of addresses).
-An item in the history list has a **assets** property, which 
+An item in the history list has an `assets` property.
+`assets`is a list with objects of type {assetName, value, satoshis}
+For example
+```
+ "assets": [
+      { "assetName": "RVN", "satoshis": -1000000, "value": -0.01 },
+      { "assetName": "LEMONADE", "satoshis": -100000000, "value": -1 }
+    ],
+```
+### Example user received 5 RVN
+```
+  {
+    "isSent": false,
+    "assets": [{ "assetName": "RVN", "value": 5, "satoshis": 500000000 }],
+    "blockHeight": 914584,
+    "transactionId": "4729236e883325878665a3d5bb989de3a65341f3c6d7a43b4ce58522773f2548"
+  }
+  ```
+  ### Example user send 1 LEMONADE token
+  ```
+    {
+    "assets": [
+      { "assetName": "RVN", "satoshis": -1000000, "value": -0.01 },
+      { "assetName": "LEMONADE", "satoshis": -100000000, "value": -1 }
+    ],
+    "blockHeight": 914603,
+    "transactionId": "1c776b263ad75d46f25d19b5330882fad020a46e220799877b982ff2c259a3be",
+    "isSent": true
+  },
+  ```
+  Unfortunately, it looks like the user intentionally sent 0.01 RVN, that is not true, that was the transaction fee.
+This will be fixed in a later version
 
 ## Example how to use
 
