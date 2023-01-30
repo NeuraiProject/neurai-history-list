@@ -1,6 +1,6 @@
 {
   "name": "@ravenrebels/ravencoin-history-list",
-  "version": "0.0.4",
+  "version": "1.0.0",
   "description": "A human understandable list of in or outgoing transactions",
   "source": "index.ts",
   "main": "./dist/index.cjs",

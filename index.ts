@@ -39,27 +39,47 @@ function getListItem(deltas: IDelta[]): IHistoryItem {
     };
     return item;
   } else {
-    const temp = {};
+    const balanceByAsset = {};
     deltas.map((delta) => {
-      temp[delta.assetName] = temp[delta.assetName] || 0;
-      temp[delta.assetName] += delta.satoshis;
+      balanceByAsset[delta.assetName] = balanceByAsset[delta.assetName] || 0;
+      balanceByAsset[delta.assetName] += delta.satoshis;
     });
 
     let isSent = false;
-    const assets: INeedABetterName[] = Object.keys(temp).map((name) => {
+
+    let assets: INeedABetterName[] = Object.keys(balanceByAsset).map((name) => {
       //If any of the values is negative, it means we have sent
-      if (temp[name] < 0) {
+      if (balanceByAsset[name] < 0) {
         isSent = true;
       }
 
       const obj = {
         assetName: name,
-        satoshis: temp[name],
-        value: temp[name] / 1e8,
+        satoshis: balanceByAsset[name],
+        value: balanceByAsset[name] / 1e8,
       };
+
       return obj;
     });
 
+    //Did we transfer asset (not RVN)
+    const containsAssets = !!assets.find((asset) => asset.assetName !== "RVN");
+
+    const hasSentAssets = isSent && containsAssets === true;
+
+    //OK we have transfered assets
+    //If we find RVN transferes less than 5 RVN, assume it is the miners fee
+    //Sure, technically you can send 4 RVN and 1 LEMONADE in the same transaction but that is exceptional
+
+    //@ts-ignore
+    if (hasSentAssets === true) {
+      assets = assets.filter((asset) => {
+        if (asset.assetName === "RVN" && asset.value < 5) {
+          return false;
+        }
+        return true;
+      });
+    }
     const listItem: IHistoryItem = {
       assets,
       blockHeight: deltas[0].height,
