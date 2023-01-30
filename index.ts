@@ -45,10 +45,14 @@ function getListItem(deltas: IDelta[]): IHistoryItem {
       balanceByAsset[delta.assetName] += delta.satoshis;
     });
 
+    const fee = getRavencoinTransactionFee(deltas);
+    if (fee > 0) {
+      balanceByAsset["RVN"] -= fee;
+    }
     let isSent = false;
 
     let assets: INeedABetterName[] = Object.keys(balanceByAsset).map((name) => {
-      //If any of the values is negative, it means we have sent
+      //If any of the values are negative, it means we have sent
       if (balanceByAsset[name] < 0) {
         isSent = true;
       }
@@ -125,3 +129,34 @@ export interface IHistoryItem {
 export default {
   getHistory,
 };
+
+function getRavencoinTransactionFee(deltas: IDelta[]): number {
+  //Check all inputed RVN and match with outputted RVN
+  //The diff is the tansaction fee.
+
+  //this only applies to SENT transactions
+
+  let inputted = 0;
+  let outputted = 0;
+
+  //It is sent if we have a RVN transfer that is negative
+  const isSent = !!deltas.find(
+    (delta) => delta.assetName === "RVN" && delta.satoshis < 0
+  );
+
+  if (isSent === false) {
+    return 0;
+  }
+
+  for (let delta of deltas) {
+    if (delta.assetName === "RVN") {
+      if (delta.satoshis > 0) {
+        inputted = inputted + delta.satoshis;
+      } else if (delta.satoshis < 0) {
+        outputted = outputted + delta.satoshis;
+      }
+    }
+  }
+  const fee = inputted - outputted;
+  return fee;
+}
