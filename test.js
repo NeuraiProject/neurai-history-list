@@ -6,6 +6,7 @@ test("Check sent one LEMONADE", () => {
 
   //The first history item should contain Alice sending one Lemonade token to Bob
   const historyItem = history[0];
+  console.log("Fist history fee", historyItem.fee / 1e8);
   const lemonade = historyItem.assets.find((a) => a.assetName === "LEMONADE");
   expect(lemonade).toBeTruthy();
   expect(lemonade.value).toBe(-1);

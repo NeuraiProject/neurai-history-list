@@ -27,11 +27,12 @@ function getListItem(deltas: IDelta[]): IHistoryItem {
     const delta = deltas[0];
     const item: IHistoryItem = {
       isSent: delta.satoshis < 0,
+      fee: 0,
       assets: [
         {
           assetName: delta.assetName,
-          value: delta.satoshis / 1e8,
           satoshis: delta.satoshis,
+          value: delta.satoshis / 1e8,
         },
       ],
       blockHeight: delta.height,
@@ -89,6 +90,7 @@ function getListItem(deltas: IDelta[]): IHistoryItem {
       blockHeight: deltas[0].height,
       transactionId: deltas[0].txid,
       isSent,
+      fee: fee,
     };
     return listItem;
   }
@@ -125,12 +127,17 @@ export interface IHistoryItem {
   assets: INeedABetterName[];
   blockHeight: number;
   transactionId: string;
+  fee: number;
 }
 export default {
   getHistory,
 };
 
 function getRavencoinTransactionFee(deltas: IDelta[]): number {
+  //We currently do not support calculation of fee.
+  //Why? because we need to get the full transaction to get the fee
+  return 0;
+  /*
   //Check all inputed RVN and match with outputted RVN
   //The diff is the tansaction fee.
 
@@ -144,19 +151,23 @@ function getRavencoinTransactionFee(deltas: IDelta[]): number {
     (delta) => delta.assetName === "RVN" && delta.satoshis < 0
   );
 
+  if (isSent === true) {
+    console.log("Think that ", deltas[0].txid, "is sent");
+  }
   if (isSent === false) {
     return 0;
   }
 
   for (let delta of deltas) {
     if (delta.assetName === "RVN") {
-      if (delta.satoshis > 0) {
+      if (delta.satoshis < 0) {
         inputted = inputted + delta.satoshis;
-      } else if (delta.satoshis < 0) {
+      } else if (delta.satoshis > 0) {
         outputted = outputted + delta.satoshis;
       }
     }
   }
+
   const fee = inputted - outputted;
-  return fee;
+  return fee;*/
 }

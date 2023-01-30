@@ -18,6 +18,7 @@ export interface IHistoryItem {
     assets: INeedABetterName[];
     blockHeight: number;
     transactionId: string;
+    fee: number;
 }
 declare const _default: {
     getHistory: typeof getHistory;
