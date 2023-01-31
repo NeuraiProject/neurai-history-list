@@ -3,6 +3,7 @@ const aliceDeltas = require("./example/alice_deltas_after_sending.json");
 
 test("Check sent one LEMONADE", () => {
   const history = History.getHistory(aliceDeltas);
+  require("fs").writeFileSync("./history.json", JSON.stringify(history));
 
   //The first history item should contain Alice sending one Lemonade token to Bob
   const historyItem = history[0];
