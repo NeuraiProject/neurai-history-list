@@ -46,9 +46,9 @@ function getListItem(deltas: IDelta[]): IHistoryItem {
       balanceByAsset[delta.assetName] += delta.satoshis;
     });
 
-    const fee = getRavencoinTransactionFee(deltas);
+    const fee = getNeuraiTransactionFee(deltas);
     if (fee > 0) {
-      balanceByAsset["RVN"] -= fee;
+      balanceByAsset["XNA"] -= fee;
     }
     let isSent = false;
 
@@ -67,19 +67,19 @@ function getListItem(deltas: IDelta[]): IHistoryItem {
       return obj;
     });
 
-    //Did we transfer asset (not RVN)
-    const containsAssets = !!assets.find((asset) => asset.assetName !== "RVN");
+    //Did we transfer asset (not XNA)
+    const containsAssets = !!assets.find((asset) => asset.assetName !== "XNA");
 
     const hasSentAssets = isSent && containsAssets === true;
 
     //OK we have transfered assets
-    //If we find RVN transferes less than 5 RVN, assume it is the miners fee
-    //Sure, technically you can send 4 RVN and 1 LEMONADE in the same transaction but that is exceptional
+    //If we find XNA transferes less than 5 XNA, assume it is the miners fee
+    //Sure, technically you can send 4 XNA and 1 LEMONADE in the same transaction but that is exceptional
 
     //@ts-ignore
     if (hasSentAssets === true) {
       assets = assets.filter((asset) => {
-        if (asset.assetName === "RVN" && asset.value < 5) {
+        if (asset.assetName === "XNA" && asset.value < 5) {
           return false;
         }
         return true;
@@ -133,12 +133,12 @@ export default {
   getHistory,
 };
 
-function getRavencoinTransactionFee(deltas: IDelta[]): number {
+function getNeuraiTransactionFee(deltas: IDelta[]): number {
   //We currently do not support calculation of fee.
   //Why? because we need to get the full transaction to get the fee
   return 0;
   /*
-  //Check all inputed RVN and match with outputted RVN
+  //Check all inputed XNA and match with outputted XNA
   //The diff is the tansaction fee.
 
   //this only applies to SENT transactions
@@ -146,9 +146,9 @@ function getRavencoinTransactionFee(deltas: IDelta[]): number {
   let inputted = 0;
   let outputted = 0;
 
-  //It is sent if we have a RVN transfer that is negative
+  //It is sent if we have a XNA transfer that is negative
   const isSent = !!deltas.find(
-    (delta) => delta.assetName === "RVN" && delta.satoshis < 0
+    (delta) => delta.assetName === "XNA" && delta.satoshis < 0
   );
 
   if (isSent === true) {
@@ -159,7 +159,7 @@ function getRavencoinTransactionFee(deltas: IDelta[]): number {
   }
 
   for (let delta of deltas) {
-    if (delta.assetName === "RVN") {
+    if (delta.assetName === "XNA") {
       if (delta.satoshis < 0) {
         inputted = inputted + delta.satoshis;
       } else if (delta.satoshis > 0) {

@@ -1,4 +1,4 @@
-const History = require("../ravencoin-history-list"); //Yes we are importing our self
+const History = require("../neurai-history-list"); //Yes we are importing our self
 const aliceDeltas = require("./example/alice_deltas_after_sending.json");
 
 test("Check sent one LEMONADE", () => {
@@ -12,7 +12,7 @@ test("Check sent one LEMONADE", () => {
   expect(lemonade).toBeTruthy();
   expect(lemonade.value).toBe(-1);
 
-  const rvn = historyItem.assets.find((a) => a.assetName === "RVN");
-  expect(rvn).toBeFalsy();
+  const xna = historyItem.assets.find((a) => a.assetName === "XNA");
+  expect(xna).toBeFalsy();
   return;
 });

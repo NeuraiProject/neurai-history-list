@@ -9,7 +9,7 @@
       "address": "ms5fr9uiEMgWCyfab3m3mi3ozQh4qfm5tx"
   },
   {
-      "assetName": "RVN",
+      "assetName": "XNA",
       "satoshis": 500000000,
       "txid": "4729236e883325878665a3d5bb989de3a65341f3c6d7a43b4ce58522773f2548",
       "index": 1,
@@ -18,7 +18,7 @@
       "address": "ms5fr9uiEMgWCyfab3m3mi3ozQh4qfm5tx"
   },
   {
-      "assetName": "RVN",
+      "assetName": "XNA",
       "satoshis": 499000000,
       "txid": "1c776b263ad75d46f25d19b5330882fad020a46e220799877b982ff2c259a3be",
       "index": 2,
@@ -45,7 +45,7 @@
       "address": "ms5fr9uiEMgWCyfab3m3mi3ozQh4qfm5tx"
   },
   {
-      "assetName": "RVN",
+      "assetName": "XNA",
       "satoshis": -500000000,
       "txid": "1c776b263ad75d46f25d19b5330882fad020a46e220799877b982ff2c259a3be",
       "index": 0,
