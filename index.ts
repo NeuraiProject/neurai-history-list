@@ -1,6 +1,11 @@
-export function getHistory(deltas: IDelta[]): IHistoryItem[] {
+export function getHistory(
+  deltas: IDelta[],
+  baseCurrency = "XNA"
+): IHistoryItem[] {
   const deltasByTransactionId = getDeltasMappedToTransactionId(deltas);
-  const history = Array.from(deltasByTransactionId.values()).map(getListItem);
+  const history = Array.from(deltasByTransactionId.values()).map((obj) =>
+    getListItem(obj, baseCurrency)
+  );
   history.sort((h1, h2) => {
     //Sort on blockheight AND transaction, you can send multiple transaction in the same block
     const value1 = h1.blockHeight + "_" + h1.transactionId;
@@ -21,7 +26,7 @@ export function getHistory(deltas: IDelta[]): IHistoryItem[] {
  *
  * @param deltas Address deltas from the same transaction
  */
-function getListItem(deltas: IDelta[]): IHistoryItem {
+function getListItem(deltas: IDelta[], baseCurrency = "XNA"): IHistoryItem {
   //Very simple if only one delta, like you received two LEMONADE tokens
   if (deltas.length === 1) {
     const delta = deltas[0];
@@ -46,9 +51,9 @@ function getListItem(deltas: IDelta[]): IHistoryItem {
       balanceByAsset[delta.assetName] += delta.satoshis;
     });
 
-    const fee = getNeuraiTransactionFee(deltas);
+    const fee = getBaseCurrencyFee(deltas, baseCurrency);
     if (fee > 0) {
-      balanceByAsset["XNA"] -= fee;
+      balanceByAsset[baseCurrency] -= fee;
     }
     let isSent = false;
 
@@ -68,7 +73,9 @@ function getListItem(deltas: IDelta[]): IHistoryItem {
     });
 
     //Did we transfer asset (not XNA)
-    const containsAssets = !!assets.find((asset) => asset.assetName !== "XNA");
+    const containsAssets = !!assets.find(
+      (asset) => asset.assetName !== baseCurrency
+    );
 
     const hasSentAssets = isSent && containsAssets === true;
 
@@ -79,7 +86,7 @@ function getListItem(deltas: IDelta[]): IHistoryItem {
     //@ts-ignore
     if (hasSentAssets === true) {
       assets = assets.filter((asset) => {
-        if (asset.assetName === "XNA" && asset.value < 5) {
+        if (asset.assetName === baseCurrency && asset.value < 5) {
           return false;
         }
         return true;
@@ -133,7 +140,7 @@ export default {
   getHistory,
 };
 
-function getNeuraiTransactionFee(deltas: IDelta[]): number {
+function getBaseCurrencyFee(deltas: IDelta[], baseCurrency = "XNA"): number {
   //We currently do not support calculation of fee.
   //Why? because we need to get the full transaction to get the fee
   return 0;

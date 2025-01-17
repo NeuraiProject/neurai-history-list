@@ -1,4 +1,4 @@
-export function getHistory(deltas: IDelta[]): IHistoryItem[];
+export function getHistory(deltas: IDelta[], baseCurrency?: string): IHistoryItem[];
 export interface IDelta {
     assetName: string;
     satoshis: number;
