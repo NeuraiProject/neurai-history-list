@@ -35,3 +35,26 @@ test("CheckEVR", () => {
   expect(xna).toBeFalsy();
   return;
 });
+
+const delta = satoshis => ({assetName:'XNA',satoshis,txid:'large',height:1,index:0,blockindex:0,address:'fixture'});
+test('large received and sent values preserve every unit and remain JSON serializable',()=>{
+ for(const raw of ['10000000000000001','-10000000000000001']) {
+  const item=History.getHistory([delta(raw)])[0];
+  expect(item.assets[0].satoshis).toBe(raw);
+  expect(item.assets[0].value).toBe(raw[0]==='-'?'-100000000.00000001':'100000000.00000001');
+  expect(()=>JSON.stringify(item)).not.toThrow();
+ }
+});
+test('large opposing deltas cancel exactly to one unit',()=>{
+ const item=History.getHistory([delta('-10000000000000000'),delta('10000000000000001')])[0];
+ expect(item.assets[0].satoshis).toBe(1);
+ expect(item.isSent).toBe(false);
+});
+test('rejects amounts already damaged by number conversion',()=>{
+ expect(()=>History.getHistory([delta(9007199254740992)])).toThrow(/safe integer/);
+});
+test('does not hide a large negative XNA delta as an asset fee',()=>{
+ const token={...delta(-100000000),assetName:'TOKEN'};
+ const item=History.getHistory([delta('-10000000000000001'),token])[0];
+ expect(item.assets.find(a=>a.assetName==='XNA').satoshis).toBe('-10000000000000001');
+});

@@ -89,3 +89,11 @@ console.table(stuff);
 ```
 
 ![image](https://user-images.githubusercontent.com/9694984/215324239-95632d7f-447b-424d-8cbf-c16cf2533b49.png)
+
+### Exact monetary values
+
+Deltas accept `satoshis` as safe integer numbers, integer strings or bigint.
+Unsafe numeric integers are rejected. Aggregation uses bigint; results remain
+JSON serializable: large raw values and large fractional display values are
+strings, while safely representable small values retain the numeric API.
+The fee field remains zero because deltas alone cannot determine the actual fee.

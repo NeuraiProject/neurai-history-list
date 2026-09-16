@@ -1,3 +1,20 @@
+/** RPC integer amounts must arrive before any lossy Number conversion. */
+function rawInteger(value: number | string | bigint): bigint {
+  if (typeof value === 'bigint') return value;
+  if (typeof value === 'number' && Number.isSafeInteger(value)) return BigInt(value);
+  if (typeof value === 'string' && value.length <= 100 && /^-?\d+$/.test(value)) return BigInt(value);
+  throw new Error('satoshis must be a safe integer, integer string or bigint');
+}
+function jsonInteger(raw: bigint): number | string {
+  return raw >= -9007199254740991n && raw <= 9007199254740991n ? Number(raw) : String(raw);
+}
+function displayAmount(raw: bigint): number | string {
+  const abs = raw < 0n ? -raw : raw;
+  const frac = (abs % 100000000n).toString().padStart(8, '0').replace(/0+$/, '');
+  const text = (raw < 0n ? '-' : '') + (abs / 100000000n) + (frac ? '.' + frac : '');
+  const num = Number(text);
+  return (abs <= 9007199254740991n || abs % 100000000n === 0n) && String(num) === text ? num : text;
+}
 export function getHistory(
   deltas: IDelta[],
   baseCurrency = "XNA"
@@ -31,13 +48,13 @@ function getListItem(deltas: IDelta[], baseCurrency = "XNA"): IHistoryItem {
   if (deltas.length === 1) {
     const delta = deltas[0];
     const item: IHistoryItem = {
-      isSent: delta.satoshis < 0,
+      isSent: rawInteger(delta.satoshis) < 0n,
       fee: 0,
       assets: [
         {
           assetName: delta.assetName,
-          satoshis: delta.satoshis,
-          value: delta.satoshis / 1e8,
+          satoshis: jsonInteger(rawInteger(delta.satoshis)),
+          value: displayAmount(rawInteger(delta.satoshis)),
         },
       ],
       blockHeight: delta.height,
@@ -45,15 +62,15 @@ function getListItem(deltas: IDelta[], baseCurrency = "XNA"): IHistoryItem {
     };
     return item;
   } else {
-    const balanceByAsset = {};
+    const balanceByAsset: Record<string, bigint> = Object.create(null);
     deltas.map((delta) => {
-      balanceByAsset[delta.assetName] = balanceByAsset[delta.assetName] || 0;
-      balanceByAsset[delta.assetName] += delta.satoshis;
+      balanceByAsset[delta.assetName] = balanceByAsset[delta.assetName] || 0n;
+      balanceByAsset[delta.assetName] += rawInteger(delta.satoshis);
     });
 
     const fee = getBaseCurrencyFee(deltas, baseCurrency);
     if (fee > 0) {
-      balanceByAsset[baseCurrency] -= fee;
+      balanceByAsset[baseCurrency] -= BigInt(fee);
     }
     let isSent = false;
 
@@ -65,8 +82,8 @@ function getListItem(deltas: IDelta[], baseCurrency = "XNA"): IHistoryItem {
 
       const obj = {
         assetName: name,
-        satoshis: balanceByAsset[name],
-        value: balanceByAsset[name] / 1e8,
+        satoshis: jsonInteger(balanceByAsset[name]),
+        value: displayAmount(balanceByAsset[name]),
       };
 
       return obj;
@@ -86,7 +103,7 @@ function getListItem(deltas: IDelta[], baseCurrency = "XNA"): IHistoryItem {
     //@ts-ignore
     if (hasSentAssets === true) {
       assets = assets.filter((asset) => {
-        if (asset.assetName === baseCurrency && asset.value < 5) {
+        if (asset.assetName === baseCurrency && rawInteger(asset.satoshis) > -500000000n && rawInteger(asset.satoshis) < 500000000n) {
           return false;
         }
         return true;
@@ -116,7 +133,7 @@ function getDeltasMappedToTransactionId(deltas: IDelta[]) {
 }
 export interface IDelta {
   assetName: string;
-  satoshis: number;
+  satoshis: number | string | bigint;
   txid: string;
   index: number;
   blockindex: number;
@@ -126,8 +143,8 @@ export interface IDelta {
 
 interface INeedABetterName {
   assetName: string;
-  value: number;
-  satoshis: number;
+  value: number | string;
+  satoshis: number | string;
 }
 export interface IHistoryItem {
   isSent: boolean;
@@ -144,37 +161,4 @@ function getBaseCurrencyFee(deltas: IDelta[], baseCurrency = "XNA"): number {
   //We currently do not support calculation of fee.
   //Why? because we need to get the full transaction to get the fee
   return 0;
-  /*
-  //Check all inputed XNA and match with outputted XNA
-  //The diff is the tansaction fee.
-
-  //this only applies to SENT transactions
-
-  let inputted = 0;
-  let outputted = 0;
-
-  //It is sent if we have a XNA transfer that is negative
-  const isSent = !!deltas.find(
-    (delta) => delta.assetName === "XNA" && delta.satoshis < 0
-  );
-
-  if (isSent === true) {
-    console.log("Think that ", deltas[0].txid, "is sent");
-  }
-  if (isSent === false) {
-    return 0;
-  }
-
-  for (let delta of deltas) {
-    if (delta.assetName === "XNA") {
-      if (delta.satoshis < 0) {
-        inputted = inputted + delta.satoshis;
-      } else if (delta.satoshis > 0) {
-        outputted = outputted + delta.satoshis;
-      }
-    }
-  }
-
-  const fee = inputted - outputted;
-  return fee;*/
 }

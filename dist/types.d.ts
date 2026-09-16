@@ -1,7 +1,7 @@
 export function getHistory(deltas: IDelta[], baseCurrency?: string): IHistoryItem[];
 export interface IDelta {
     assetName: string;
-    satoshis: number;
+    satoshis: number | string | bigint;
     txid: string;
     index: number;
     blockindex: number;
@@ -10,8 +10,8 @@ export interface IDelta {
 }
 interface INeedABetterName {
     assetName: string;
-    value: number;
-    satoshis: number;
+    value: number | string;
+    satoshis: number | string;
 }
 export interface IHistoryItem {
     isSent: boolean;
