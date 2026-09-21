@@ -68,7 +68,7 @@ function $80bd448eb6ea085b$export$f9582a3c130d9538(deltas, baseCurrency = "XNA")
             balanceByAsset[delta.assetName] += $80bd448eb6ea085b$var$rawInteger(delta.satoshis);
         });
         const fee = $80bd448eb6ea085b$var$getBaseCurrencyFee(deltas, baseCurrency);
-        if (fee > 0) balanceByAsset[baseCurrency] -= BigInt(fee);
+        if (fee > 0n) balanceByAsset[baseCurrency] -= fee;
         let isSent = false;
         let assets = Object.keys(balanceByAsset).map((name)=>{
             //If any of the values are negative, it means we have sent
@@ -96,7 +96,9 @@ function $80bd448eb6ea085b$export$f9582a3c130d9538(deltas, baseCurrency = "XNA")
             blockHeight: deltas[0].height,
             transactionId: deltas[0].txid,
             isSent: isSent,
-            fee: fee
+            // Fee calculation is not implemented. Preserve the public JSON contract.
+            // A future implementation must define exact output units and representation.
+            fee: 0
         };
         return listItem;
     }
@@ -117,7 +119,7 @@ var $80bd448eb6ea085b$export$2e2bcd8739ae039 = {
 function $80bd448eb6ea085b$var$getBaseCurrencyFee(deltas, baseCurrency = "XNA") {
     //We currently do not support calculation of fee.
     //Why? because we need to get the full transaction to get the fee
-    return 0;
+    return 0n;
 }
 
 

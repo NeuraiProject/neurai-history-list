@@ -69,8 +69,8 @@ function getListItem(deltas: IDelta[], baseCurrency = "XNA"): IHistoryItem {
     });
 
     const fee = getBaseCurrencyFee(deltas, baseCurrency);
-    if (fee > 0) {
-      balanceByAsset[baseCurrency] -= BigInt(fee);
+    if (fee > 0n) {
+      balanceByAsset[baseCurrency] -= fee;
     }
     let isSent = false;
 
@@ -114,7 +114,9 @@ function getListItem(deltas: IDelta[], baseCurrency = "XNA"): IHistoryItem {
       blockHeight: deltas[0].height,
       transactionId: deltas[0].txid,
       isSent,
-      fee: fee,
+      // Fee calculation is not implemented. Preserve the public JSON contract.
+      // A future implementation must define exact output units and representation.
+      fee: 0,
     };
     return listItem;
   }
@@ -157,8 +159,8 @@ export default {
   getHistory,
 };
 
-function getBaseCurrencyFee(deltas: IDelta[], baseCurrency = "XNA"): number {
+function getBaseCurrencyFee(deltas: IDelta[], baseCurrency = "XNA"): bigint {
   //We currently do not support calculation of fee.
   //Why? because we need to get the full transaction to get the fee
-  return 0;
+  return 0n;
 }

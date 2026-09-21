@@ -58,3 +58,13 @@ test('does not hide a large negative XNA delta as an asset fee',()=>{
  const item=History.getHistory([delta('-10000000000000001'),token])[0];
  expect(item.assets.find(a=>a.assetName==='XNA').satoshis).toBe('-10000000000000001');
 });
+
+
+test('unimplemented fees remain numeric zero in single and grouped JSON histories', () => {
+  for (const values of [['10000000000000001'], ['10000000000000002', '-1']]) {
+    const result = History.getHistory(values.map(delta));
+    expect(result[0].fee).toBe(0);
+    expect(result[0].assets[0].satoshis).toBe('10000000000000001');
+    expect(JSON.parse(JSON.stringify(result))).toEqual(result);
+  }
+});
