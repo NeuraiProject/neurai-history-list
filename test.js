@@ -68,3 +68,63 @@ test('unimplemented fees remain numeric zero in single and grouped JSON historie
     expect(JSON.parse(JSON.stringify(result))).toEqual(result);
   }
 });
+
+// neurai-key 5 address types: Legacy P2PKH, AuthScript v1, PQ v2, ECDSA v3.
+// The history is computed from txid, assetName and satoshis only; the address
+// is never parsed, so mixing types inside one transaction changes nothing.
+const MIXED_ADDRESSES = [
+  'tNc1F3aqhmGhKipLWa9U4tuoLh9yyP1ZXP',
+  'tnc1p83wfxfypfr3tqpwakdgmk5r0pwpsemq5ngdsx7gef8yc84pndfmqqd6m25',
+  'tpq1z4xrgwmgmhr3ezrkk5aa0ez3xdztvm9jzrmgu4uxz6vm8l9lgv4zs3xdctv',
+  'tnq1r0c9zl485wv7wcfutxfyv8k2ltpfk5hdyp3s7g4chlphx8d2m6npqwxvjya',
+];
+const [LEGACY, AUTHSCRIPT_V1, PQ_V2, ECDSA_V3] = MIXED_ADDRESSES;
+const mixedDelta = (address, assetName, satoshis, txid, index, height) =>
+  ({ assetName, satoshis, txid, index, blockindex: 1, height, address });
+const mixedDeltas = [
+  // XNA sent from inputs on three address types, change on a fourth.
+  mixedDelta(LEGACY, 'XNA', -150000000, 'mixed-xna', 0, 20),
+  mixedDelta(AUTHSCRIPT_V1, 'XNA', -250000000, 'mixed-xna', 1, 20),
+  mixedDelta(PQ_V2, 'XNA', -100000000, 'mixed-xna', 2, 20),
+  mixedDelta(ECDSA_V3, 'XNA', 399990000, 'mixed-xna', 0, 20),
+  // Asset transfer: token spent from v2, token change to v3, small XNA fee
+  // paid from v1 with XNA change back to the legacy address.
+  mixedDelta(PQ_V2, 'TOKEN', -300000000, 'mixed-asset', 0, 21),
+  mixedDelta(ECDSA_V3, 'TOKEN', 200000000, 'mixed-asset', 1, 21),
+  mixedDelta(AUTHSCRIPT_V1, 'XNA', -100000000, 'mixed-asset', 2, 21),
+  mixedDelta(LEGACY, 'XNA', 99000000, 'mixed-asset', 3, 21),
+  // Received on each witness type in one transaction.
+  mixedDelta(AUTHSCRIPT_V1, 'XNA', 100000000, 'mixed-received', 0, 22),
+  mixedDelta(PQ_V2, 'XNA', 200000000, 'mixed-received', 1, 22),
+  mixedDelta(ECDSA_V3, 'XNA', 300000000, 'mixed-received', 2, 22),
+];
+
+test('mixed address types in one txid give the same history as a single address', () => {
+  const history = History.getHistory(mixedDeltas);
+  const sameAddress = History.getHistory(mixedDeltas.map((d) => ({ ...d, address: LEGACY })));
+  expect(history).toEqual(sameAddress);
+
+  // Rotating which address type holds which delta changes nothing either.
+  const rotated = History.getHistory(mixedDeltas.map((d) => ({
+    ...d,
+    address: MIXED_ADDRESSES[(MIXED_ADDRESSES.indexOf(d.address) + 1) % MIXED_ADDRESSES.length],
+  })));
+  expect(rotated).toEqual(history);
+});
+
+test('mixed address types: one item per txid with the summed amounts', () => {
+  const history = History.getHistory(mixedDeltas);
+  expect(history.map((h) => h.transactionId)).toEqual(['mixed-received', 'mixed-asset', 'mixed-xna']);
+
+  const [received, asset, xna] = history;
+  expect(received.isSent).toBe(false);
+  expect(received.assets).toEqual([{ assetName: 'XNA', satoshis: 600000000, value: 6 }]);
+
+  // XNA movement under 5 XNA next to a sent asset is treated as the fee.
+  expect(asset.isSent).toBe(true);
+  expect(asset.assets).toEqual([{ assetName: 'TOKEN', satoshis: -100000000, value: -1 }]);
+
+  expect(xna.isSent).toBe(true);
+  expect(xna.assets).toEqual([{ assetName: 'XNA', satoshis: -100010000, value: -1.0001 }]);
+  expect(JSON.parse(JSON.stringify(history))).toEqual(history);
+});

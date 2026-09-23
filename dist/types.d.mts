@@ -1,0 +1,26 @@
+export function getHistory(deltas: IDelta[], baseCurrency?: string): IHistoryItem[];
+export interface IDelta {
+    assetName: string;
+    satoshis: number | string | bigint;
+    txid: string;
+    index: number;
+    blockindex: number;
+    height: number;
+    address: string;
+}
+interface INeedABetterName {
+    assetName: string;
+    value: number | string;
+    satoshis: number | string;
+}
+export interface IHistoryItem {
+    isSent: boolean;
+    assets: INeedABetterName[];
+    blockHeight: number;
+    transactionId: string;
+    fee: number;
+}
+declare const _default: {
+    getHistory: typeof getHistory;
+};
+export default _default;

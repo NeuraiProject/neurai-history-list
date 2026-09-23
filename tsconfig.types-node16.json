@@ -1,0 +1,11 @@
+{
+  // node16 decides the module format of each declaration file strictly:
+  // `import` must get ESM declarations (dist/types.d.mts) and `require`
+  // CommonJS ones (dist/types.d.ts). Up to 1.2.7 package.json#exports had no
+  // `types`, so node16, nodenext and bundler found no declarations (TS7016).
+  "extends": "./tsconfig.types-nodenext.json",
+  "compilerOptions": {
+    "module": "Node16",
+    "moduleResolution": "Node16"
+  }
+}

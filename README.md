@@ -97,3 +97,16 @@ Unsafe numeric integers are rejected. Aggregation uses bigint; results remain
 JSON serializable: large raw values and large fractional display values are
 strings, while safely representable small values retain the numeric API.
 The fee field remains zero because deltas alone cannot determine the actual fee.
+
+## TypeScript
+
+The package ships its declarations for both builds: `dist/types.d.mts` for
+`import` and `dist/types.d.ts` for `require`. Up to 1.2.7 `package.json#exports`
+did not list them, so TypeScript projects using `moduleResolution` `node16`,
+`nodenext` or `bundler` found no types (TS7016); only `node` (node10) did.
+
+```bash
+npm test               # jest + npm run test:types
+npm run test:types     # compiles types-test/ (ESM and CommonJS) in NodeNext, Node16 and Bundler
+npm run test:package   # packs the tarball and checks it in a clean project (runtime and types, also TypeScript 4.7)
+```
