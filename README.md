@@ -14,6 +14,13 @@ That transaction typically contains
 - One or more unspent transaction outputs (UTXOs) to cover the miner fee, Alice needs to pay some XNA to send an asset.
 - One or more UTXOs for the LEMONADE transfer, like input 20 LEMONADE, output one to BOB and 19 back to a change address.
 
+## Reset testnet
+
+This package transforms address deltas passed by the application; it does not
+connect to a node or persist history. After the testnet reset, verify the
+node's genesis and fetch deltas from the new chain. Store any history cache
+under both the network name and genesis hash, and clear old testnet entries.
+
 ## Install
 
 `npm install @neuraiproject/neurai-history-list`
