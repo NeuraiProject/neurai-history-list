@@ -128,3 +128,9 @@ test('mixed address types: one item per txid with the summed amounts', () => {
   expect(xna.assets).toEqual([{ assetName: 'XNA', satoshis: -100010000, value: -1.0001 }]);
   expect(JSON.parse(JSON.stringify(history))).toEqual(history);
 });
+
+test('history is sorted by block height as a number, newest first', () => {
+  const at = (height, txid) => ({ assetName: 'XNA', satoshis: 100000000, txid, height, index: 0, blockindex: 0, address: 'fixture' });
+  const history = History.getHistory([at(99, 'b'), at(100, 'a'), at(1000, 'c'), at(100, 'd')]);
+  expect(history.map((h) => [h.blockHeight, h.transactionId])).toEqual([[1000, 'c'], [100, 'd'], [100, 'a'], [99, 'b']]);
+});

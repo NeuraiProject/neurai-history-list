@@ -31,11 +31,11 @@ function $80bd448eb6ea085b$export$f9582a3c130d9538(deltas, baseCurrency = "XNA")
     const deltasByTransactionId = $80bd448eb6ea085b$var$getDeltasMappedToTransactionId(deltas);
     const history = Array.from(deltasByTransactionId.values()).map((obj)=>$80bd448eb6ea085b$var$getListItem(obj, baseCurrency));
     history.sort((h1, h2)=>{
-        //Sort on blockheight AND transaction, you can send multiple transaction in the same block
-        const value1 = h1.blockHeight + "_" + h1.transactionId;
-        const value2 = h2.blockHeight + "_" + h2.transactionId;
-        if (value1 > value2) return -1;
-        if (value2 < value1) return 1;
+        //Newest block first, compared as numbers ("99" > "100" as text).
+        //Then by transaction, you can send multiple transaction in the same block
+        if (h1.blockHeight !== h2.blockHeight) return h2.blockHeight - h1.blockHeight;
+        if (h1.transactionId > h2.transactionId) return -1;
+        if (h1.transactionId < h2.transactionId) return 1;
         return 0;
     });
     return history;

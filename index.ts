@@ -24,14 +24,15 @@ export function getHistory(
     getListItem(obj, baseCurrency)
   );
   history.sort((h1, h2) => {
-    //Sort on blockheight AND transaction, you can send multiple transaction in the same block
-    const value1 = h1.blockHeight + "_" + h1.transactionId;
-    const value2 = h2.blockHeight + "_" + h2.transactionId;
-
-    if (value1 > value2) {
+    //Newest block first, compared as numbers ("99" > "100" as text).
+    //Then by transaction, you can send multiple transaction in the same block
+    if (h1.blockHeight !== h2.blockHeight) {
+      return h2.blockHeight - h1.blockHeight;
+    }
+    if (h1.transactionId > h2.transactionId) {
       return -1;
     }
-    if (value2 < value1) {
+    if (h1.transactionId < h2.transactionId) {
       return 1;
     }
     return 0;
